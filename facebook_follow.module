@@ -82,7 +82,7 @@ function facebook_follow_field_formatter_view($entity_type, $entity, $field, $in
   }
   
   $sizes = array(
-    'standard' = array('width' => 450, 'height' => 35),
+    'standard' => array('width' => 450, 'height' => 35),
     'button_count' => array('width' => 90, 'height' => 20),
     'button_count' => array('width' => 55, 'height' => 65),
   );
