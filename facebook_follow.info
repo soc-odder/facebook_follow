@@ -1,0 +1,4 @@
+name = Facebook Follow
+description = "Add a formatter to text fields that allows admins display the field as a Facebook Follow button"
+package = Fields
+core = 7.x

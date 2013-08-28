@@ -1,0 +1,91 @@
+<?php
+/**
+ * @file
+ * Formatter to add icons to social links.
+ */
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function facebook_follow_formatter_field_formatter_info() {
+  return array(
+    // The key must be unique, so it's best to prefix with your module's name.
+    'facebook_follow_formatter' => array(
+      // the label is is what is displayed in the select box in the UI.
+      'label' => t('Facebook Follow Button formatter'),
+      // List the field types your formatter is for.
+      'field types' => array('link_field', 'url'),
+      // You can usually leave 'multiple values' as follows:
+      'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      // Array of the settings we'll create.
+      /*
+      'settings'  => array(
+        // Give a default value for when the form is first loaded.
+        'icon_size' => 'medium',
+      ),
+      */
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function facebook_follow_formatter_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  //This gets the view_mode where our settings are stored
+  $display = $instance['display'][$view_mode];
+  //This gets the actual settings
+  $settings = $display['settings'];
+
+  // Initialize the element variable.
+  $element = array();
+  /*
+  // Add your select box.
+  $element['icon_size'] = array(
+    '#type'           => 'select',                // Use a select box widget
+    '#title'          => t('Button Size'),        // Widget label
+    '#description'    => t('Select button size'), // Helper text
+    '#default_value'  => $settings['icon_size'],   // Get the value if it's already been set
+    '#options'        => array(
+      'small'  => 'Small',
+      'medium' => 'Medium',
+      'large'  => 'Large',
+    ),
+  );
+  */
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function facebook_follow_formatter_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  // We use t() for translation and placeholders to guard against attacks.
+  $summary = t('Use a @size size icon for the social media button', array(
+    '@size' => $settings['icon_size'],
+  ));
+  return $summary;
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ * This code just passes straight through to a theme function, MYMODULE_formatter_FORMATTER
+ * (e.g. MYMODULE_formatter_MYMODULE_absolute_url).
+ */
+function facebook_follow_formatter_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  $settings = $display['settings'];
+
+  foreach ($items as $delta => $item) {
+    // Getting the actual value.
+    $raw_url = isset($item['url']) ? $item['url'] : $item['value'];
+
+    $fb = '<iframe src="//www.facebook.com/plugins/follow?href=' . $raw_url . '&amp;layout=standard&amp;show_faces=true&amp;colorscheme=light&amp;width=450&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe>';
+
+      // Assign it to the #markup of the element.
+    $element[$delta]['#markup'] = $fb;
+  }
+  return $element;
+}
