@@ -80,12 +80,18 @@ function facebook_follow_field_formatter_view($entity_type, $entity, $field, $in
   if (empty($format)) {
     $format = 'standard';
   }
+  
+  $sizes = array(
+    'standard' = array('width' => 450, 'height' => 35),
+    'button_count' => array('width' => 90, 'height' => 20),
+    'button_count' => array('width' => 55, 'height' => 65),
+  );
 
   foreach ($items as $delta => $item) {
     // Getting the actual value.
     $raw_url = isset($item['url']) ? $item['url'] : $item['value'];
 
-    $fb = '<iframe src="//www.facebook.com/plugins/follow?href=' . $raw_url . '&amp;layout=' . $format . '&amp;show_faces=false&amp;colorscheme=light&amp;width=450&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe>';
+    $fb = '<iframe src="//www.facebook.com/plugins/follow?href=' . $raw_url . '&amp;layout=' . $format . '&amp;show_faces=false&amp;colorscheme=light&amp;width=450&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:' . $sizes[$format]['width'] . 'px; height:' . $sizes[$format]['height'] . 'px;" allowTransparency="true"></iframe>';
 
       // Assign it to the #markup of the element.
     $element[$delta]['#markup'] = $fb;
