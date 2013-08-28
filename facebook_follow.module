@@ -39,20 +39,19 @@ function facebook_follow_field_formatter_settings_form($field, $instance, $view_
 
   // Initialize the element variable.
   $element = array();
-  /*
+
   // Add your select box.
-  $element['icon_size'] = array(
+  $element['format'] = array(
     '#type'           => 'select',                // Use a select box widget
-    '#title'          => t('Button Size'),        // Widget label
-    '#description'    => t('Select button size'), // Helper text
+    '#title'          => t('Layout style'),        // Widget label
+    '#description'    => t('Select layout style'), // Helper text
     '#default_value'  => $settings['icon_size'],   // Get the value if it's already been set
     '#options'        => array(
-      'small'  => 'Small',
-      'medium' => 'Medium',
-      'large'  => 'Large',
+      'standard'  => 'Standard',
+      'button_count' => 'Button Count',
+      'box_count'  => 'Box count',
     ),
   );
-  */
   return $element;
 }
 
@@ -63,8 +62,8 @@ function facebook_follow_field_formatter_settings_summary($field, $instance, $vi
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
   // We use t() for translation and placeholders to guard against attacks.
-  $summary = t('Use a @size size icon for the social media button', array(
-    '@size' => $settings['icon_size'],
+  $summary = t('Use a @format to change the layout of the follow button', array(
+    '@format' => $settings['format'],
   ));
   return $summary;
 }
@@ -77,12 +76,16 @@ function facebook_follow_field_formatter_settings_summary($field, $instance, $vi
 function facebook_follow_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
   $settings = $display['settings'];
+  $format = $settings['format'];
+  if (empty($format)) {
+    $format = 'standard';
+  }
 
   foreach ($items as $delta => $item) {
     // Getting the actual value.
     $raw_url = isset($item['url']) ? $item['url'] : $item['value'];
 
-    $fb = '<iframe src="//www.facebook.com/plugins/follow?href=' . $raw_url . '&amp;layout=standard&amp;show_faces=true&amp;colorscheme=light&amp;width=450&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe>';
+    $fb = '<iframe src="//www.facebook.com/plugins/follow?href=' . $raw_url . '&amp;layout=' . $format . '&amp;show_faces=false&amp;colorscheme=light&amp;width=450&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe>';
 
       // Assign it to the #markup of the element.
     $element[$delta]['#markup'] = $fb;
